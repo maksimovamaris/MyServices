@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">MyServices</string>
-    <string name="timer_title">Timer Service</string>
+    <string name="timer_title">Бомба взорвется через..</string>
     <string name="timer_desc">Time:</string>
     <string name="channel_name">name</string>
     <string name="channel_descr">descr</string>
-    <string name="stop">stop</string>
+    <string name="stop">Спасти собачку!</string>
+    <string name="start_service">Start service</string>
+    <string name="stop_service">Stop service</string>
 </resources>

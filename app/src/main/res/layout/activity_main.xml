@@ -5,18 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
+<EditText
+    android:id="@+id/parameter"
+    android:inputType="number"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margin"/>
     <Button
         android:id="@+id/start"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-
-        android:text="Start service"/>
+        android:layout_margin="@dimen/margin"
+        android:text="@string/start_service"/>
     <Button
         android:id="@+id/stop"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-
-        android:text="Stop service"/>
+        android:layout_margin="@dimen/margin"
+        android:text="@string/stop_service"/>
 
 </LinearLayout>

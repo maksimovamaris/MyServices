@@ -1,5 +1,4 @@
 package com.example.myservices;
-
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -20,12 +19,16 @@ import androidx.core.app.NotificationManagerCompat;
 public class TimerService extends Service {
     private static final String TAG="TimerService";
     static final String ACTION_CLOSE="TIME_SERVICE_ACTION_CLOSE";
+    static final String MESSAGE="TIMER_COUNTDOWN";
     private final String CHANNEL_ID="channel_id_2";
-//    private static final String TAG="MainAct";
+    private  NotificationCompat.Builder builder;
     private static final long TIMER_PERIOD=1000L;
-    private static final long TIME_COUNTDOWN =1000*60L ;
+
+    private static final long TIME_COUNTDOWN =1000*20L ;
+    private long countdown;
     private CountDownTimer mCountDownTimer;
     private  static final int NOTIFICATION_ID=1;
+    private int progress=0;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -43,8 +46,9 @@ public int onStartCommand(Intent intent , int flags,int startId)
     Log.d(TAG,"onstartcommand called");
     if(ACTION_CLOSE.equals(intent.getAction())){stopSelf();}
     else{
-        startCountDownTimer(TIME_COUNTDOWN,TIMER_PERIOD);
-        startForeground(NOTIFICATION_ID,createNotification(1000));
+        countdown=intent.getLongExtra(MESSAGE,TIME_COUNTDOWN);
+        startCountDownTimer(countdown,TIMER_PERIOD);
+        startForeground(NOTIFICATION_ID,createNotification(1000,progress));
     }
     return START_NOT_STICKY;
 }
@@ -55,9 +59,9 @@ public int onStartCommand(Intent intent , int flags,int startId)
         return null;
     }
 
-    private Notification createNotification(long currentTime)
+    private Notification createNotification(long currentTime,int progress)
     {
-        NotificationCompat.Builder builder=new NotificationCompat.Builder(this,CHANNEL_ID);
+       builder =new NotificationCompat.Builder(this,CHANNEL_ID);
         Intent intent=new Intent(this,MainActivity.class);
         PendingIntent pendingIntent=PendingIntent.getActivity(this,0,intent,0);
 
@@ -68,6 +72,7 @@ public int onStartCommand(Intent intent , int flags,int startId)
 
         builder.setContentTitle(getResources().getString(R.string.timer_title))
                 .setSmallIcon(R.mipmap.ic_launcher)
+                .setProgress((int)(currentTime),progress,false)
         .setContentText(getResources().getString(R.string.timer_desc)+currentTime)
         .setOnlyAlertOnce(true)
 
@@ -88,10 +93,13 @@ private void createNotificationChannel()
     notificationManager.createNotificationChannel(channel);
 
     }
-    private  void updateMotification(@NonNull Notification notification)
+    
+    private  void updateNotification(@NonNull Notification notification,int maxProgress)
     {
+progress=(int)(TIMER_PERIOD)+progress;
         NotificationManagerCompat notificationManager =NotificationManagerCompat.from(this);
-        notificationManager.notify(NOTIFICATION_ID,notification);
+        builder.setProgress(maxProgress,progress,false);
+        notificationManager.notify(NOTIFICATION_ID,builder.build());
 
     }
 
@@ -100,9 +108,9 @@ private void startCountDownTimer(long time,long period)
     mCountDownTimer = new CountDownTimer(time, period)
     {@Override
     public void onTick(long millisUntilFinished)
-        {
+        {progress=progress+1;
             Log.d(TAG, "onTick() called with: millisUntilFinished = [" + millsToSeconds(millisUntilFinished) + "]");
-            updateMotification(createNotification(millsToSeconds(millisUntilFinished)));   }
+            updateNotification(createNotification(millsToSeconds(millisUntilFinished),progress),(int)(time));   }
     @Override
     public void onFinish()
         {
