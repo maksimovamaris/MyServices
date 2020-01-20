@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MyServices</string>
+    <string name="timer_title">Timer Service</string>
+    <string name="timer_desc">Time:</string>
+    <string name="channel_name">name</string>
+    <string name="channel_descr">descr</string>
+    <string name="stop">stop</string>
+</resources>
