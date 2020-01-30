@@ -10,6 +10,7 @@ public class MainActivity extends AppCompatActivity {
 private static final String TAG="MainAct";
     private static final String MESSAGE = "TIMER_COUNTDOWN";
     private long parameter;
+
 private EditText editText;
     @Override
     protected void onCreate(Bundle savedInstanceState)

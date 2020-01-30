@@ -43,12 +43,16 @@ public class TimerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onstartcommand called");
-        if (ACTION_CLOSE.equals(intent.getAction())) {
-            stopSelf();
-        } else {
-            countdown = intent.getLongExtra(MESSAGE, TIME_COUNTDOWN);
-            startCountDownTimer(countdown, TIMER_PERIOD);
-            startForeground(NOTIFICATION_ID, createNotification(1000, progress));
+        switch(intent.getAction()) {
+            case (ACTION_CLOSE):
+                stopSelf();
+                break;
+            default: {
+                countdown = intent.getLongExtra(MESSAGE, TIME_COUNTDOWN);
+                startCountDownTimer(countdown, TIMER_PERIOD);
+                startForeground(NOTIFICATION_ID, createNotification(1000, progress));
+                break;
+            }
         }
         return START_NOT_STICKY;
     }
@@ -63,8 +67,6 @@ public class TimerService extends Service {
         builder = new NotificationCompat.Builder(this, CHANNEL_ID);
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-
         Intent intentCloseService = new Intent(this, TimerService.class);
         intentCloseService.setAction(ACTION_CLOSE);
         PendingIntent pendingIntentCloseService = PendingIntent.getService(this, 0, intentCloseService, 0);
